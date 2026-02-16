@@ -3,25 +3,15 @@ name: Deploy Planet Technical Solutions
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v3
-
-      - name: ⚙️ Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: 🏗️ Build Project
-        run: |
-          npm install
-          npm run build
 
       - name: 🚀 Sync Files to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -29,5 +19,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/ 
+          # Use '.' because your files (index.html, css/, js/) are in the root
+          local-dir: ./ 
+          # This ensures it lands exactly in the folder we confirmed
           server-dir: ./public_html/planettechnicalsolutions.co.ke/
